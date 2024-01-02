@@ -1,15 +1,27 @@
 package com.devsuperior.desafio2.entities;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
+import java.util.HashSet;
 import java.util.Objects;
-@Entity
+import java.util.Set;
 
+@Entity
+@Table(name = "tb_participante")
 public class Participante {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String nome;
+    @Column(unique = true)
     private String email;
+
+    @ManyToMany
+    @JoinTable(name = "tb_participante_atividade",
+            joinColumns = @JoinColumn(name = "participante_id"),
+            inverseJoinColumns = @JoinColumn(name = "atividade_id"))
+    private Set<Atividade> atividades = new HashSet<>();
 
     public Participante(){}
 
@@ -41,6 +53,10 @@ public class Participante {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Set<Atividade> getAtividades() {
+        return atividades;
     }
 
     @Override
